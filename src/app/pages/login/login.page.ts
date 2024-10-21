@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Storage } from '@ionic/storage-angular';
+
 
 @Component({
   selector: 'app-login',
@@ -18,12 +18,13 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     // Inicializar el almacenamiento
-    this.storage.create();
+    // Inicializar el almacenamiento
+    this.storage['create']();
   }
 
   async onLogin() {
     // Recuperar el usuario de IonicStorage
-    const usuarioGuardado = await this.storage.get('usuario');
+    const usuarioGuardado = await this.storage['get']('usuario');
     
     if (usuarioGuardado) {
       // Validar las credenciales

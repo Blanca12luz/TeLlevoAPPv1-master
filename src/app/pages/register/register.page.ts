@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Usuario } from 'src/app/interfaces/usuario';
-import { Storage } from '@ionic/storage-angular';
+
 
 
 @Component({
@@ -31,7 +31,7 @@ export class RegisterPage implements OnInit {
     // Validación básica para asegurarnos de que los campos no estén vacíos
     if (this.usuario.username && this.usuario.password && this.usuario.nombre && this.usuario.apellido) {
       // Guardamos el objeto usuario en IonicStorage
-      await this.storage.set('usuario', this.usuario);
+      await this.storage['set']('usuario', this.usuario);
       console.log('Usuario registrado con éxito');
       this.router.navigate(["/login"]);
     } else {
