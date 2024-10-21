@@ -1,0 +1,38 @@
+<app-encabezado></app-encabezado>
+
+<ion-content>
+
+  <ion-list class="ion-text-center">
+    <ion-list>
+      <ion-item>
+        <ion-input label="Nombre" placeholder="Enter text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input label="Lugar" placeholder="Enter text"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Fecha</ion-label>
+      </ion-item>
+      <ion-datetime presentation="date" [(ngModel)]="datetime"></ion-datetime>
+
+      <ion-accordion-group>
+        <ion-accordion value="first">
+          <ion-item slot="header">
+            <ion-label>Vehiculos</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">Moto</div>
+          <div class="ion-padding" slot="content">Furgon</div>
+          <div class="ion-padding" slot="content">Auto</div>
+          <div class="ion-padding" slot="content">Camioneta</div>
+        </ion-accordion>
+      </ion-accordion-group>
+
+
+    </ion-list>
+    <ion-button fill="outline" (click)="viajecreado()">Crear Viaje</ion-button>
+  </ion-list>
+
+
+
+</ion-content>

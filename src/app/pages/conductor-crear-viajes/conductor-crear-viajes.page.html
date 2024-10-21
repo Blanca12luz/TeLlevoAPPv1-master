@@ -1,0 +1,38 @@
+<app-encabezado></app-encabezado>
+
+<ion-content>
+  <ion-list class="ion-text-center">
+    <ion-list>
+      <ion-item>
+        <ion-input label="Nombre" placeholder="Enter text"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input label="Lugar" placeholder="Enter text"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Fecha</ion-label>
+      </ion-item>
+      <ion-datetime presentation="date" [(ngModel)]="datetime"></ion-datetime>
+
+      <ion-accordion-group>
+        <ion-accordion value="first">
+          <ion-item slot="header">
+            <ion-label>Espacio Disponible</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">1</div>
+          <div class="ion-padding" slot="content">2</div>
+          <div class="ion-padding" slot="content">3</div>
+          <div class="ion-padding" slot="content">No hay espacio</div>
+        </ion-accordion>
+      </ion-accordion-group>
+      <ion-item>
+        <ion-input label="Precio" type="number" placeholder="000"></ion-input>
+      </ion-item>
+
+    </ion-list>
+    <ion-button fill="outline" (click)="viajecreado()">Crear Viaje</ion-button>
+  </ion-list>
+
+
+
+</ion-content>

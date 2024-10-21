@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="Volver" mode="ios" defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-text color="primary" class="ion-text-center">
+    <h1>Recupera tu contraseña</h1>
+  </ion-text>
+
+  <ion-list>
+    <form #frm="ngForm" (ngSubmit)="mostrarAlerta()" >
+    <ion-item>
+      <ion-input labelPlacement="floating" placeholder="Enter text" >
+        <div slot="label">Usuario <ion-text color="danger">(Requerido)</ion-text></div>
+      </ion-input>
+    </ion-item>
+ 
+    <ion-button type="submit" expand="full" class="ion-margin-top" [disabled]="frm.invalid">
+      Recuperar Contraseña
+    </ion-button>
+  </form>
+  <ion-text color="primary">
+    <p>{{accion}}</p>
+  </ion-text>
+
+</ion-list>
+ 
+
+</ion-content>

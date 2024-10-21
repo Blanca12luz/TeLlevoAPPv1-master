@@ -1,0 +1,39 @@
+<!-- profile.html -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Perfil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="start" name="create"></ion-icon>
+        Editar perfil
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-avatar>
+        <img src="https://via.placeholder.com/150" alt="Profile Picture">
+      </ion-avatar>
+      <ion-card-title>{{ username }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>Nombre: {{ name }}</p>
+      <p>Apellido: {{ lastName }}</p>
+      <p>Email: {{ email }}</p>
+      <p>Teléfono: {{ phone }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="ion-activatable ripple-parent custom-parent">
+    Cerrar Secion
+    <ion-ripple-effect></ion-ripple-effect>
+  </div>
+  <div class="ion-activatable ripple-parent">
+    Ser Conductor
+    <ion-ripple-effect class="custom-ripple"></ion-ripple-effect>
+  </div>
+</ion-content>

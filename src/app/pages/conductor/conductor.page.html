@@ -1,0 +1,33 @@
+<app-encabezado titulo="Conductor"></app-encabezado>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-avatar>
+        <img src="https://via.placeholder.com/150" alt="Profile Picture">
+      </ion-avatar>
+      <ion-card-title>{{ username }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>Nombre: {{ name }}</p>
+      <p>Apellido: {{ lastName }}</p>
+      <p>Email: {{ email }}</p>
+      <p>Teléfono: {{ phone }}</p>
+      <p>Patente: {{patente}}</p>
+      <p>Vehiculo: {{Vehiculo}}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="ion-activatable ripple-parent custom-parent">
+    <ion-button (click)="onSalir()" expand="block" fill="clear" shape="round">
+      Cerrar Secion
+    </ion-button>
+   
+    <ion-ripple-effect></ion-ripple-effect>
+  </div>
+  <div class="ion-activatable ripple-parent">
+    Ser cliente
+    <ion-ripple-effect class="custom-ripple"></ion-ripple-effect>
+  </div>
+</ion-content>
