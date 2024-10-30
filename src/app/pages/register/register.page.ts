@@ -50,3 +50,5 @@ export class RegisterPage implements OnInit {
     })
   }
 }
+
+//prueba para el pull 
