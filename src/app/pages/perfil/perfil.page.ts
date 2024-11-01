@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-perfil',
@@ -11,20 +12,32 @@ export class PerfilPage implements OnInit {
   lastName: string;
   email: string;
   phone: string;
-  constructor() {
-    // Inicializa los datos del perfil
-    this.username = 'johnDoe';
-    this.name = 'John';
-    this.lastName = 'Doe';
-    this.email = 'johndoe@example.com';
-    this.phone = '123-456-7890';
+
+  constructor(private storage: Storage) {
+    // Inicializa las variables
+    this.username = '';
+    this.name = '';
+    this.lastName = '';
+    this.email = '';
+    this.phone = '';
   }
 
-  ngOnInit() {
-  }
+  async ngOnInit() {
+    // Inicializar el almacenamiento
+    await this.storage.create();
 
+    // Recuperar el usuario de IonicStorage
+    const usuarioGuardado = await this.storage.get('usuario');
+
+    if (usuarioGuardado) {
+      // Asignar los valores del usuario a las variables del perfil
+      this.username = usuarioGuardado.username;
+      this.name = usuarioGuardado.nombre; // Asegúrate de que el campo 'nombre' existe en el registro
+      this.lastName = usuarioGuardado.apellido; // Asegúrate de que el campo 'apellido' existe en el registro
+      // Si tienes otros campos como email y phone, asegúrate de que también se guarden durante el registro
+    } else {
+      console.log('No hay usuario registrado');
+      // Aquí puedes agregar un mensaje para el usuario
+    }
+  }
 }
-
-
-
-
