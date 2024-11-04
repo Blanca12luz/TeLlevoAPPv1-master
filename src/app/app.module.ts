@@ -8,12 +8,12 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { provideHttpClient } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage-angular';
-
+import { CapacitorGoogleMaps } from '@capacitor/google-maps/dist/typings/implementation';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, IonicStorageModule.forRoot()],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy},provideHttpClient()],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
