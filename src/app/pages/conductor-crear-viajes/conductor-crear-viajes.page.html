@@ -6,7 +6,8 @@
       <ion-input label="Nombre" placeholder="Enter text"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-input label="Lugar" placeholder="Enter text"></ion-input>
+      <ion-button expand="block" fill="outline" >Lugar</ion-button>
+      
     </ion-item>
     <ion-item>
       <ion-label>Fecha</ion-label>
@@ -30,9 +31,6 @@
     <ion-item>
       <ion-input label="Precio" type="number" placeholder="000"></ion-input>
     </ion-item>
-
-    <!-- Componente del mapa -->
-    <div #map style="width: 100%; height: 400px; margin-top: 20px;"></div>
 
     <ion-button expand="block" fill="outline" (click)="viajecreado()">Crear Viaje</ion-button>
   </ion-list>

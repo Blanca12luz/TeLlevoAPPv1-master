@@ -51,7 +51,11 @@ const routes: Routes = [
   {
     path: 'solucitud',
     loadChildren: () => import('./pages/solucitud/solucitud.module').then( m => m.SolucitudPageModule)
+  },  {
+    path: 'mapa',
+    loadChildren: () => import('./pages/mapa/mapa.module').then( m => m.MapaPageModule)
   },
+
 
 ];
 
