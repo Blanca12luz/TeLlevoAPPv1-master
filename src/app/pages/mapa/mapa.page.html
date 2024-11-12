@@ -1,10 +1,35 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>mapa</ion-title>
+    <ion-title>Mapa</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-<!-- Componente del mapa -->
-<div #map style="width: 100%; height: 400px; margin-top: 20px;"></div>
+  <!-- Campos de entrada para el lugar de inicio y destino -->
+  <ion-item>
+    <ion-label>Inicio</ion-label>
+    <ion-input [(ngModel)]="lugarInicio" placeholder="Buscar lugar de inicio"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label>Destino</ion-label>
+    <ion-input [(ngModel)]="lugarDestino" placeholder="Buscar lugar de destino"></ion-input>
+  </ion-item>
+
+  <!-- Botón para buscar los lugares -->
+  <ion-button expand="block" color="primary" (click)="buscarLugares()">
+    Buscar y marcar en el mapa
+  </ion-button>
+
+  <!-- Mapa de Google -->
+  <div #map style="width: 100%; height: 400px; margin-top: 20px;"></div>
+
+  <!-- Mensaje de estado del viaje -->
+  <ion-item *ngIf="puntoInicio && puntoDestino">
+    <ion-label>Viaje configurado entre el punto de inicio y el destino</ion-label>
+  </ion-item>
+
+  <!-- Botón para guardar el viaje en Ionic Storage -->
+  <ion-button expand="block" color="primary" (click)="guardarViaje()" *ngIf="puntoInicio && puntoDestino">
+    Guardar Viaje
+  </ion-button>
 </ion-content>

@@ -1,6 +1,10 @@
+import { ViajeService } from './../../service/viaje.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { GoogleMap } from '@capacitor/google-maps';
 import { Location } from './../../interfaces/location';
+
+
+declare var google: any; // Para acceder a la API de Google Places
 
 @Component({
   selector: 'app-mapa',
@@ -8,20 +12,17 @@ import { Location } from './../../interfaces/location';
   styleUrls: ['./mapa.page.scss'],
 })
 export class MapaPage implements OnInit {
+  public map: GoogleMap | undefined;
+  public puntoInicio: Location | undefined;
+  public puntoDestino: Location | undefined;
+  public lugarInicio: string = '';
+  public lugarDestino: string = '';
 
-  private map: GoogleMap | undefined;
-  private puntoInicio: Location | undefined;
-  private puntoDestino: Location | undefined;
   @ViewChild('map', { static: false }) mapElement: ElementRef | undefined;
 
+  constructor(public viajeService: ViajeService) {}
 
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-
+  ngOnInit() {}
 
   async ngAfterViewInit() {
     await this.createMap();
@@ -47,39 +48,69 @@ export class MapaPage implements OnInit {
         zoom: 8,
       },
     });
-
-    // Añadir un listener para manejar clicks en el mapa
-    await this.map.setOnMapClickListener(async (event) => {
-      const { latitude, longitude } = event;
-      console.log(`Clicked at: ${latitude}, ${longitude}`);
-
-      if (!this.puntoInicio) {
-        // Configura el punto de inicio y crea un marcador
-        this.puntoInicio = { lat: latitude, lng: longitude };
-        console.log('Punto de inicio establecido:', this.puntoInicio);
-
-        await this.map?.addMarkers([
-          {
-            coordinate: this.puntoInicio,
-            title: "Punto de Inicio",
-          },
-        ]);
-      } else if (!this.puntoDestino) {
-        // Configura el punto de destino y crea un marcador
-        this.puntoDestino = { lat: latitude, lng: longitude };
-        console.log('Punto de destino establecido:', this.puntoDestino);
-
-        await this.map?.addMarkers([
-          {
-            coordinate: this.puntoDestino,
-            title: "Punto de Destino",
-          },
-        ]);
-      } else {
-        // Si ya existen ambos puntos, puedes implementar lógica adicional aquí, como reiniciar o mover marcadores
-        console.log('Ambos puntos ya están establecidos');
-      }
-    });
   }
 
+  async buscarLugares() {
+    // Inicializa el servicio de Places
+    const service = new google.maps.places.PlacesService(this.mapElement);
+
+    // Buscar el lugar de inicio
+    if (this.lugarInicio) {
+      service.findPlaceFromQuery(
+        {
+          query: this.lugarInicio,
+          fields: ['name', 'geometry'],
+        },
+        (results: any[], status: any) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && results[0]) {
+            this.puntoInicio = {
+              lat: results[0].geometry.location.lat(),
+              lng: results[0].geometry.location.lng(),
+            };
+            this.map?.setCamera({
+              coordinate: this.puntoInicio,
+              zoom: 14,
+            });
+            this.map?.addMarkers([
+              {
+                coordinate: this.puntoInicio,
+                title: "Inicio",
+              },
+            ]);
+          }
+        }
+      );
+    }
+
+    // Buscar el lugar de destino
+    if (this.lugarDestino) {
+      service.findPlaceFromQuery(
+        {
+          query: this.lugarDestino,
+          fields: ['name', 'geometry'],
+        },
+        (results: any[], status: any) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && results[0]) {
+            this.puntoDestino = {
+              lat: results[0].geometry.location.lat(),
+              lng: results[0].geometry.location.lng(),
+            };
+            this.map?.addMarkers([
+              {
+                coordinate: this.puntoDestino,
+                title: "Destino",
+              },
+            ]);
+          }
+        }
+      );
+    }
+  }
+
+  async guardarViaje() {
+    if (this.puntoInicio && this.puntoDestino) {
+      await this.viajeService.guardarViaje(this.puntoInicio, this.puntoDestino);
+      console.log('Viaje guardado correctamente en Ionic Storage');
+    }
+  }
 }
