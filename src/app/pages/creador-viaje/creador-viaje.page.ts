@@ -13,13 +13,15 @@ export class CreadorViajePage implements OnInit {
   public nombre: string = '';
   public fecha: any;
   public espacioDisponible: number = 1;
-  public precio: number | null = null; // Asegurarse de que sea un número o nulo
+  public precio: number | null = null;
+  public viajes: any[] = []; // Arreglo para almacenar y mostrar los viajes creados
 
   constructor(private storage: Storage) {}
 
   async ngOnInit() {
     await this.storage.create(); // Inicializar el almacenamiento
 
+    // Configurar la fecha inicial
     const date = new Date();
     let dayChange = -2;
 
@@ -28,22 +30,43 @@ export class CreadorViajePage implements OnInit {
     }
 
     date.setDate(date.getDate() + dayChange);
-    this.fecha = date.toISOString();
+    this.fecha = date.toISOString(); // Almacenar en `this.fecha`
+
+    // Cargar los viajes guardados en el arreglo `viajes`
+    const storedViajes = await this.storage.get('viajes');
+    if (storedViajes) {
+      this.viajes = storedViajes;
+    }
   }
 
   async viajecreado() {
-    // Validar que el precio sea numérico y esté definido
     if (this.precio === null || isNaN(this.precio)) {
       console.log("El precio debe ser un número válido");
       return;
     }
 
-    // Guardar los datos en el storage
-    await this.storage.set('nombre', this.nombre);
-    await this.storage.set('fecha', this.fecha);
-    await this.storage.set('espacioDisponible', this.espacioDisponible);
-    await this.storage.set('precio', this.precio);
+    // Crear un objeto de viaje con los datos actuales
+    const nuevoViaje = {
+      nombre: this.nombre,
+      fecha: this.fecha,
+      espacioDisponible: this.espacioDisponible,
+      precio: this.precio
+    };
+
+    // Agregar el nuevo viaje al arreglo de viajes
+    this.viajes.push(nuevoViaje);
+
+    // Guardar el arreglo de viajes actualizado en el storage
+    await this.storage.set('viajes', this.viajes);
 
     console.log("Viaje creado y datos guardados");
+
+    // Limpiar los campos después de crear el viaje
+    this.nombre = '';
+    const resetDate = new Date(); // Crear una nueva fecha para resetear
+    resetDate.setDate(resetDate.getDate() - 2); // Aplicar el cambio de días
+    this.fecha = resetDate.toISOString(); // Asignar el valor actualizado a `this.fecha`
+    this.espacioDisponible = 1;
+    this.precio = null;
   }
 }

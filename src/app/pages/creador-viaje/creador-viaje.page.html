@@ -1,21 +1,15 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="volver"></ion-back-button>
-    </ion-buttons>
+    
     <ion-title>Crear Viaje</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <!-- Formulario para crear un nuevo viaje -->
   <ion-item>
     <ion-label position="stacked">Nombre</ion-label>
     <ion-input [(ngModel)]="nombre" placeholder="Enter text"></ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-label position="stacked">Lugar</ion-label>
-    <ion-button> LUGAR </ion-button>
   </ion-item>
 
   <ion-item>
@@ -35,5 +29,23 @@
     <ion-input type="number" [(ngModel)]="precio" placeholder="1000"></ion-input>
   </ion-item>
 
-  <ion-button expand="block" (click)="viajecreado()">CREAR VIAJE</ion-button>
+  <ion-button expand="block" (click)="viajecreado()">Solicitar viaje</ion-button>
+
+  <!-- Lista de viajes creados (sin permitir modificaciones) -->
+  <ion-list>
+    <ion-item-divider color="light">
+      <ion-label>Viajes Creados</ion-label>
+    </ion-item-divider>
+
+    <ion-card *ngFor="let viaje of viajes">
+      <ion-card-header>
+        <ion-card-title>{{ viaje.nombre }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Fecha:</strong> {{ viaje.fecha | date: 'dd/MM/yyyy' }}</p>
+        <p><strong>Espacio Disponible:</strong> {{ viaje.espacioDisponible }}</p>
+        <p><strong>Precio:</strong> ${{ viaje.precio }}</p>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
 </ion-content>
