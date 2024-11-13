@@ -1,5 +1,6 @@
+import { Component, OnInit } from '@angular/core';
+import { Storage } from '@ionic/storage-angular';
 
-import { Component, OnInit} from '@angular/core';
 @Component({
   selector: 'app-conductor-crear-viajes',
   templateUrl: './conductor-crear-viajes.page.html',
@@ -7,12 +8,16 @@ import { Component, OnInit} from '@angular/core';
 })
 export class ConductorCrearViajesPage implements OnInit {
   public datetime: any;
+  public nombre: string = '';
+  public fecha: any;
+  public espacioDisponible: number = 1;
+  public precio: number | null = null; // Asegurar que sea un número o nulo
 
-  
+  constructor(private storage: Storage) {}
 
-  constructor() {}
+  async ngOnInit() {
+    await this.storage.create(); // Inicializar el almacenamiento
 
-  ngOnInit() {
     const date = new Date();
     let dayChange = -2;
 
@@ -21,10 +26,22 @@ export class ConductorCrearViajesPage implements OnInit {
     }
 
     date.setDate(date.getDate() + dayChange);
-    this.datetime = date.toISOString();
+    this.fecha = date.toISOString();
   }
 
-  viajecreado() {
-    console.log("viaje creado");
+  async viajecreado() {
+    // Validar que el precio sea numérico y esté definido
+    if (this.precio === null || isNaN(this.precio)) {
+      console.log("El precio debe ser un número válido");
+      return;
+    }
+
+    // Guardar los datos en el storage
+    await this.storage.set('nombre', this.nombre);
+    await this.storage.set('fecha', this.fecha);
+    await this.storage.set('espacioDisponible', this.espacioDisponible);
+    await this.storage.set('precio', this.precio);
+
+    console.log("Viaje creado y datos guardados");
   }
 }

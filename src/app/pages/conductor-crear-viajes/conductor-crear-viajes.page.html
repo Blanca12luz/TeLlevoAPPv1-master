@@ -1,37 +1,39 @@
-<app-encabezado></app-encabezado>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="volver"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Crear Viaje</ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
-  <ion-list class="ion-text-center">
-    <ion-item>
-      <ion-input label="Nombre" placeholder="Enter text"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-button expand="block" fill="outline" >Lugar</ion-button>
-      
-    </ion-item>
-    <ion-item>
-      <ion-label>Fecha</ion-label>
-    </ion-item>
-    <ion-datetime presentation="date" [(ngModel)]="datetime"></ion-datetime>
+  <ion-item>
+    <ion-label position="stacked">Nombre</ion-label>
+    <ion-input [(ngModel)]="nombre" placeholder="Enter text"></ion-input>
+  </ion-item>
 
-    <ion-accordion-group>
-      <ion-accordion value="first">
-        <ion-item slot="header">
-          <ion-label>Espacio Disponible</ion-label>
-        </ion-item>
-        <ion-list slot="content">
-          <ion-item>1</ion-item>
-          <ion-item>2</ion-item>
-          <ion-item>3</ion-item>
-          <ion-item>No hay espacio</ion-item>
-        </ion-list>
-      </ion-accordion>
-    </ion-accordion-group>
+  <ion-item>
+    <ion-label position="stacked">Lugar</ion-label>
+    <ion-button> LUGAR </ion-button>
+  </ion-item>
 
-    <ion-item>
-      <ion-input label="Precio" type="number" placeholder="000"></ion-input>
-    </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Fecha</ion-label>
+    <ion-datetime display-format="DD/MM/YYYY" [(ngModel)]="fecha"></ion-datetime>
+  </ion-item>
 
-    <ion-button expand="block" fill="outline" (click)="viajecreado()">Crear Viaje</ion-button>
-  </ion-list>
+  <ion-item>
+    <ion-label position="stacked">Espacio Disponible</ion-label>
+    <ion-select [(ngModel)]="espacioDisponible">
+      <ion-select-option *ngFor="let espacio of [1, 2, 3]" [value]="espacio">{{ espacio }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Precio</ion-label>
+    <ion-input type="number" [(ngModel)]="precio" placeholder="1000"></ion-input>
+  </ion-item>
+
+  <ion-button expand="block" (click)="viajecreado()">CREAR VIAJE</ion-button>
 </ion-content>
