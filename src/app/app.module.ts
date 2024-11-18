@@ -12,7 +12,11 @@ import { CapacitorGoogleMaps } from '@capacitor/google-maps/dist/typings/impleme
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, IonicStorageModule.forRoot()],
+  imports: [
+    BrowserModule, 
+    IonicModule.forRoot(), 
+    AppRoutingModule, 
+    IonicStorageModule.forRoot()],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy},provideHttpClient()],
   bootstrap: [AppComponent]
 })
