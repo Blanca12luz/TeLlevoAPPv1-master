@@ -1,36 +1,37 @@
 <ion-header>
   <ion-toolbar color="secondary">
-  <ion-title color="dark" mode="md" class="ion-text-center">TeLlevoAPP</ion-title>
+    <ion-title color="dark" mode="md" class="ion-text-center">TeLlevoAPP</ion-title>
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content class="ion-padding">
-  <form #frm="ngForm" (ngSubmit)="onLogin()" >
-    <ion-text color="primary" class="i-text-capitalize" class="ion-text-center">
-      <h1>Iniciar Sesion</h1>
+  <form #frmLogin="ngForm" (ngSubmit)="login()">
+    <ion-text color="primary" class="ion-text-center">
+      <h1>Iniciar Sesión</h1>
     </ion-text>
+    
     <ion-item>
       <ion-label position="floating">Correo</ion-label>
-      <ion-input type="text" name="usuario" [(ngModel)]="usuario.username"></ion-input>
+      <ion-input type="email" name="email" [(ngModel)]="cred.email" required></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label position="floating">Password</ion-label>
-      <ion-input type="password" required name="password" [(ngModel)]="usuario.password"></ion-input>
+      <ion-label position="floating">Contraseña</ion-label>
+      <ion-input type="password" name="password" [(ngModel)]="cred.password" required></ion-input>
     </ion-item>
     
-    <ion-button type="submit" expand="full" class="ion-margin-top" [disabled]="frm.invalid">
+    <ion-button type="submit" expand="full" class="ion-margin-top" [disabled]="frmLogin.invalid">
       Login
     </ion-button>
   </form>
-  <ion-text color="primary" class="ion-text-center ion-margin-top"
-  routerLink="/register">
-    <p>Crear una Cuenta<p>
+
+  <ion-text color="primary" class="ion-text-center ion-margin-top" routerLink="/register">
+    <p>Crear una Cuenta</p>
   </ion-text>
+  
   <br>
-  <ion-text color="secondary" class="ion-text-center ion-margin-top"
-  routerLink="/rpass">
+  
+  <ion-text color="secondary" class="ion-text-center ion-margin-top" routerLink="/rpass">
     <p>¿Olvidaste tu contraseña?</p>
   </ion-text>
 </ion-content>
