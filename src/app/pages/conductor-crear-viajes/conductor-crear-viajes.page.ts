@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
+import { ViajeService } from './../../service/viaje.service';
+import { Location } from './../../interfaces/location';
 
 @Component({
   selector: 'app-conductor-crear-viajes',
@@ -7,41 +9,47 @@ import { Storage } from '@ionic/storage-angular';
   styleUrls: ['./conductor-crear-viajes.page.scss'],
 })
 export class ConductorCrearViajesPage implements OnInit {
-  public datetime: any;
   public nombre: string = '';
   public fecha: any;
   public espacioDisponible: number = 1;
-  public precio: number | null = null; // Asegurar que sea un número o nulo
+  public precio: number | null = null;
+  public puntoInicio: Location | undefined;
+  public puntoDestino: Location | undefined;
+viajeForm: any;
 
-  constructor(private storage: Storage) {}
+  constructor(private storage: Storage, private viajeService: ViajeService) {}
 
   async ngOnInit() {
-    await this.storage.create(); // Inicializar el almacenamiento
+    await this.storage.create();
+    this.fecha = new Date().toISOString();
 
-    const date = new Date();
-    let dayChange = -2;
-
-    if (date.getDate() + dayChange <= 0) {
-      dayChange = -dayChange;
+    // Obtener los puntos de inicio y destino guardados
+    const viaje = await this.viajeService.obtenerViaje();
+    if (viaje) {
+      this.puntoInicio = viaje.puntoInicio;
+      this.puntoDestino = viaje.puntoDestino;
+      console.log('Puntos cargados:', this.puntoInicio, this.puntoDestino);
+    } else {
+      console.log('No se encontraron puntos de inicio o destino');
     }
-
-    date.setDate(date.getDate() + dayChange);
-    this.fecha = date.toISOString();
   }
 
-  async viajecreado() {
-    // Validar que el precio sea numérico y esté definido
-    if (this.precio === null || isNaN(this.precio)) {
-      console.log("El precio debe ser un número válido");
+  async viajecreado(viajeForm: any) {
+    if (viajeForm.invalid) {
+      console.log('El formulario contiene errores. Por favor, revisa los campos obligatorios.');
       return;
     }
 
-    // Guardar los datos en el storage
+    if (this.precio == null || isNaN(Number(this.precio))) {
+      console.log('El precio debe ser un número válido');
+      return;
+    }
+
     await this.storage.set('nombre', this.nombre);
     await this.storage.set('fecha', this.fecha);
     await this.storage.set('espacioDisponible', this.espacioDisponible);
     await this.storage.set('precio', this.precio);
 
-    console.log("Viaje creado y datos guardados");
+    console.log('Viaje creado y datos guardados');
   }
 }

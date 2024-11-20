@@ -1,39 +1,56 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="volver"></ion-back-button>
+      <ion-back-button text="Volver" mode="ios" defaultHref="/home"></ion-back-button>
     </ion-buttons>
-    <ion-title>Crear Viaje</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-item>
-    <ion-label position="stacked">Nombre</ion-label>
-    <ion-input [(ngModel)]="nombre" placeholder="Enter text"></ion-input>
-  </ion-item>
+  <form (ngSubmit)="viajecreado(viajeForm)">
+    <ion-item>
+      <ion-label position="floating">Nombre</ion-label>
+      <ion-input [(ngModel)]="nombre" name="nombre" required></ion-input>
+    </ion-item>
 
-  <ion-item>
-    <ion-label position="stacked">Lugar</ion-label>
-    <ion-button> LUGAR </ion-button>
-  </ion-item>
+    <ion-item>
+      <ion-label position="floating">Fecha</ion-label>
+      <ion-datetime 
+        [(ngModel)]="fecha" 
+        name="fecha" 
+        displayFormat="MMM DD, YYYY" 
+        pickerFormat="MMM DD, YYYY" 
+        required>
+      </ion-datetime>
+    </ion-item>
 
-  <ion-item>
-    <ion-label position="stacked">Fecha</ion-label>
-    <ion-datetime display-format="DD/MM/YYYY" [(ngModel)]="fecha"></ion-datetime>
-  </ion-item>
+    <!-- Campo de precio -->
+    <ion-item>
+      <ion-label position="floating">Precio</ion-label>
+      <ion-input 
+        type="number" 
+        [(ngModel)]="precio" 
+        name="precio" 
+        required>
+      </ion-input>
+    </ion-item>
 
-  <ion-item>
-    <ion-label position="stacked">Espacio Disponible</ion-label>
-    <ion-select [(ngModel)]="espacioDisponible">
-      <ion-select-option *ngFor="let espacio of [1, 2, 3]" [value]="espacio">{{ espacio }}</ion-select-option>
-    </ion-select>
-  </ion-item>
+    <!-- Mostrar los puntos de inicio y destino -->
+    <ion-item>
+      <ion-label>Punto de Inicio:</ion-label>
+      <ion-text>{{ puntoInicio?.lat }}, {{ puntoInicio?.lng }}</ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-label>Punto de Destino:</ion-label>
+      <ion-text>{{ puntoDestino?.lat }}, {{ puntoDestino?.lng }}</ion-text>
+    </ion-item>
 
-  <ion-item>
-    <ion-label position="stacked">Precio</ion-label>
-    <ion-input type="number" [(ngModel)]="precio" placeholder="1000"></ion-input>
-  </ion-item>
+    <!-- Botón para abrir el mapa y buscar lugares -->
+    <ion-item>
+      <ion-button routerLink="/mapa">Buscar Lugares</ion-button>
+    </ion-item>
 
-  <ion-button expand="block" (click)="viajecreado()">CREAR VIAJE</ion-button>
+    <!-- Botón para guardar el viaje -->
+    <ion-button expand="block" type="submit">Guardar Viaje</ion-button>
+  </form>
 </ion-content>

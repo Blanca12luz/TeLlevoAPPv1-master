@@ -3,9 +3,6 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { GoogleMap } from '@capacitor/google-maps';
 import { Location } from './../../interfaces/location';
 
-
-declare var google: any; // Para acceder a la API de Google Places
-
 @Component({
   selector: 'app-mapa',
   templateUrl: './mapa.page.html',
@@ -26,6 +23,7 @@ export class MapaPage implements OnInit {
 
   async ngAfterViewInit() {
     await this.createMap();
+    await this.getCurrentLocation();
   }
 
   async createMap() {
@@ -36,81 +34,64 @@ export class MapaPage implements OnInit {
 
     const mapRef = this.mapElement.nativeElement;
 
-    this.map = await GoogleMap.create({
-      id: 'my-map',
-      element: mapRef,
-      apiKey: 'AIzaSyAaBSfpqmASg5IN8ywbZQpDveMIR7PMxn4', // Reemplaza con tu clave API
-      config: {
-        center: {
-          lat: 33.6,
-          lng: -117.9,
+    try {
+      this.map = await GoogleMap.create({
+        id: 'my-map',
+        element: mapRef,
+        apiKey: this.getApiKey(), // Mover la clave a un método o variable de entorno
+        config: {
+          center: { lat: 33.6, lng: -117.9 },
+          zoom: 14,
         },
-        zoom: 8,
-      },
-    });
+      });
+    } catch (error) {
+      console.error('Error al crear el mapa:', error);
+    }
   }
 
-  async buscarLugares() {
-    // Inicializa el servicio de Places
-    const service = new google.maps.places.PlacesService(this.mapElement);
+  private getApiKey(): string {
+    // Aquí podrías cargar la clave de API desde un archivo de configuración o variable de entorno
+    return 'AIzaSyAaBSfpqmASg5IN8ywbZQpDveMIR7PMxn4';
+  }
 
-    // Buscar el lugar de inicio
-    if (this.lugarInicio) {
-      service.findPlaceFromQuery(
-        {
-          query: this.lugarInicio,
-          fields: ['name', 'geometry'],
+  async getCurrentLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const currentLocation: Location = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          await this.map?.setCamera({
+            coordinate: currentLocation,
+            zoom: 14,
+          });
+          await this.map?.addMarkers([
+            {
+              coordinate: currentLocation,
+              title: "Tu Ubicación",
+            },
+          ]);
         },
-        (results: any[], status: any) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK && results[0]) {
-            this.puntoInicio = {
-              lat: results[0].geometry.location.lat(),
-              lng: results[0].geometry.location.lng(),
-            };
-            this.map?.setCamera({
-              coordinate: this.puntoInicio,
-              zoom: 14,
-            });
-            this.map?.addMarkers([
-              {
-                coordinate: this.puntoInicio,
-                title: "Inicio",
-              },
-            ]);
-          }
+        (error) => {
+          console.error("Error al obtener la ubicación actual: ", error);
         }
       );
-    }
-
-    // Buscar el lugar de destino
-    if (this.lugarDestino) {
-      service.findPlaceFromQuery(
-        {
-          query: this.lugarDestino,
-          fields: ['name', 'geometry'],
-        },
-        (results: any[], status: any) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK && results[0]) {
-            this.puntoDestino = {
-              lat: results[0].geometry.location.lat(),
-              lng: results[0].geometry.location.lng(),
-            };
-            this.map?.addMarkers([
-              {
-                coordinate: this.puntoDestino,
-                title: "Destino",
-              },
-            ]);
-          }
-        }
-      );
+    } else {
+      console.error("Geolocalización no es soportada por este navegador.");
     }
   }
 
   async guardarViaje() {
     if (this.puntoInicio && this.puntoDestino) {
-      await this.viajeService.guardarViaje(this.puntoInicio, this.puntoDestino);
-      console.log('Viaje guardado correctamente en Ionic Storage');
+      try {
+        await this.viajeService.guardarViaje(this.puntoInicio, this.puntoDestino);
+        console.log('Viaje guardado correctamente en Ionic Storage');
+      } catch (error) {
+        console.error('Error al guardar el viaje:', error);
+      }
+    } else {
+      console.log('Puntos de inicio o destino no definidos');
     }
   }
 }
