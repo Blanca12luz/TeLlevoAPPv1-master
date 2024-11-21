@@ -1,10 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgForm } from '@angular/forms';
-import { AlertController } from '@ionic/angular';
+import { Usuario } from 'src/app/interfaces/usuario'; 
 
-import { Storage } from '@ionic/storage-angular';
-import { Usuario } from '../../interfaces/usuario';
 
 @Component({
   selector: 'app-register',
@@ -12,80 +10,45 @@ import { Usuario } from '../../interfaces/usuario';
   styleUrls: ['./register.page.scss'],
 })
 export class RegisterPage implements OnInit {
-  cred = { email: '', password: '' };
-  user: Usuario = {
-    nombre: '',
-    email: '',
-    img: null,
-    tipo: null,
+
+  usuario: Usuario = {
     username: '',
-    apellido: '',
-    password: ''
+    password: '',
+    nombre: '',
+    email: null,
+    tipo: null,
   };
-  
-  @ViewChild('Registrarse') private _registerForm!: NgForm;
-  data: any;
-  private _authSrv: any;
 
-  constructor(
-    
-    private _alertSrv: AlertController,
-    private _router: Router,
-    private storage: Storage
-  ) {}
+  constructor(private router: Router, private firestore: AngularFirestore) { }
 
-  async ngOnInit() {
-    await this.storage.create(); // Inicializa Ionic Storage
-  }
+  ngOnInit() {}
 
-  async register() {
-    if (this._registerForm.valid) {
-      // Asigna el email y password al usuario
-      this.user.email = this.cred.email;
-      this.user.password = this.cred.password;
+  async onRegister() {
+    try {
+      if (this.usuario.username && this.usuario.password && this.usuario.nombre) {
+        // Referencia a la colección de usuarios en Firestore
+        const usuarioRef = this.firestore.collection('usuarios').doc(this.usuario.username);
+        const usuarioBuscado = await usuarioRef.get().toPromise();
 
-      try {
-        // Registro de usuario en Firebase Authentication
-        const success = await this._authSrv.register(this.cred.email, this.cred.password, this.data.username);
-        
-        if (success) {
-          // Guardar datos adicionales del usuario en Firebase Firestore
-          const userSaved = await this._authSrv.saveUserDataToFirestore(this.user);
-
-          if (userSaved) {
-            // Guarda el usuario en Ionic Storage
-            await this.storage.set('user', this.user);
-            this._router.navigate(['/tipocuenta']);
-            console.log('Registro exitoso y datos guardados.');
-          } else {
-            throw new Error('Error al guardar los datos del usuario en Firebase');
-          }
+        if (usuarioBuscado?.exists) {
+          // Agregar el usuario a la base de datos Firestore
+          await usuarioRef.set({
+            username: this.usuario.username,
+            password: this.usuario.password, // Recuerda encriptar la contraseña
+            nombre: this.usuario.nombre,
+            email: this.usuario.email,
+            tipo: this.usuario.tipo
+          });
+          console.log('Usuario registrado con éxito');
+          this.router.navigate(['/login']);
         } else {
-          throw new Error('Error al registrar el usuario en Firebase Authentication');
+          console.log('El usuario ya existe');
         }
-      } catch (error) {
-        console.error(error);
-        await this._showAlert('error_register');
+      } else {
+        console.log('Por favor, complete todos los campos');
       }
-    } else {
-      await this._showAlert('missing_data');
+    } catch (error) {
+      console.error('Error al registrar usuario:', error);
     }
-  }
-
-  private async _showAlert(type: 'error_register' | 'missing_data') {
-    const _alert = await this._alertSrv.create({
-      header: type === 'error_register' ? 'Error en el registro' : 'Datos faltantes',
-      subHeader: 'Registro',
-      message: type === 'error_register' 
-        ? 'Ha ocurrido un error al intentar registrarse. Por favor, inténtelo de nuevo.' 
-        : 'Por favor, complete todos los campos para poder registrarse.',
-      mode: 'ios',
-      buttons: ['OK']
-    });
-    await _alert.present();
-  }
-
-  async xd() {
-    this._authSrv.deRegister();
   }
 }

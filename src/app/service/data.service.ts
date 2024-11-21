@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { Firestore, addDoc, setDoc, collectionData, docData, updateDoc } from '@angular/fire/firestore';
 import { collection, doc } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FirebaseService {
+export class DataService {
 
   constructor(private _firebase: Firestore) { }
 
@@ -36,5 +36,3 @@ export class FirebaseService {
     return await updateDoc(docRef, data);
   }
 }
-
-

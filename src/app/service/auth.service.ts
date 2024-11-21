@@ -1,19 +1,20 @@
-import { User } from '@angular/fire/auth';
+import { Usuario } from 'src/app/interfaces/usuario';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { DataService } from './data.service';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private _accountData!: User;
+  private _accountData!: Usuario;
 
-  constructor(private _afAuth: AngularFireAuth, private _data: AuthService) {
+  constructor(private _afAuth: AngularFireAuth, private _data: DataService) {
     this.loadUserFromLocalStorage();
   }
 
-  async register(email: string, password: string, data: User) {
+  async register(email: string, password: string, data: Usuario) {
     const r = await this._afAuth.createUserWithEmailAndPassword(email, password);
     if (r.user) {
       this._accountData = data;
@@ -23,16 +24,13 @@ export class AuthService {
     }
     return false;
   }
-  addDocumentWithId(arg0: string, email: string, data: User) {
-    throw new Error('Method not implemented.');
-  }
 
   async login(email: string, password: string) {
     try {
       const r = await this._afAuth.signInWithEmailAndPassword(email, password);
       console.log(r.user?.email);
       if (r.user?.email) {
-        this._accountData = await this._data.getDocument('users', email) as User;
+        this._accountData = await this._data.getDocument('users', email) as Usuario;
         this.saveUserToLocalStorage();
         return { status: "success" };
       }
@@ -43,9 +41,6 @@ export class AuthService {
       }
     }
     return { status: "error", error: "unknown" };
-  }
-  getDocument(arg0: string, email: string): any {
-    throw new Error('Method not implemented.');
   }
 
   async deRegister() {
@@ -63,7 +58,7 @@ export class AuthService {
 
   async refreshUserData() {
     if (this._accountData.email) {
-      this._accountData = await this._data.getDocument('users', this._accountData.email) as User;
+      this._accountData = await this._data.getDocument('users', this._accountData.email) as Usuario;
       this.saveUserToLocalStorage();
     }
   }
@@ -74,7 +69,7 @@ export class AuthService {
   }
 
   async getUserData(uid: string) {
-    return await this._data.getDocument('users', uid) as User;
+    return await this._data.getDocument('users', uid) as Usuario;
   }
 
   private saveUserToLocalStorage() {
