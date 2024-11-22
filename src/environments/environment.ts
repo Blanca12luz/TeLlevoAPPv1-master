@@ -7,6 +7,7 @@ export const environment = {
   firebase: {
     apiKey: "AIzaSyDYEx-mRFp5IPt9pN-fnu8JVf3ZTMZ644M",
     authDomain: "tellevoappv1-master.firebaseapp.com",
+    databaseURL: "https://tellevoappv1-master-default-rtdb.firebaseio.com",
     projectId: "tellevoappv1-master",
     storageBucket: "tellevoappv1-master.firebasestorage.app",
     messagingSenderId: "180376407977",

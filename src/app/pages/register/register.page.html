@@ -12,20 +12,70 @@
     <h1>Crear Cuenta</h1>
   </ion-text>
   <form #frmRegister="ngForm" (ngSubmit)="onRegister()">
+    <!-- Correo -->
     <ion-item>
       <ion-label position="floating">Correo</ion-label>
-      <ion-input required type="text" name="username" [(ngModel)]="usuario.username"></ion-input>
+      <ion-input 
+        required 
+        type="text" 
+        name="username" 
+        [(ngModel)]="usuario.username" 
+        #username="ngModel">
+      </ion-input>
     </ion-item>
+    <ion-text color="danger" *ngIf="username.invalid && username.touched">
+      <p>El correo es obligatorio</p>
+    </ion-text>
+
+    <!-- Contraseña -->
     <ion-item>
       <ion-label position="floating">Contraseña</ion-label>
-      <ion-input required type="password" name="password" [(ngModel)]="usuario.password"></ion-input>
+      <ion-input 
+        required 
+        type="password" 
+        name="password" 
+        [(ngModel)]="usuario.password" 
+        #password="ngModel">
+      </ion-input>
     </ion-item>
+    <ion-text color="danger" *ngIf="password.invalid && password.touched">
+      <p>La contraseña es obligatoria</p>
+    </ion-text>
+
+    <!-- Nombre -->
     <ion-item>
       <ion-label position="floating">Nombre</ion-label>
-      <ion-input required type="text" name="nombre" [(ngModel)]="usuario.nombre"></ion-input>
+      <ion-input 
+        required 
+        type="text" 
+        name="nombre" 
+        [(ngModel)]="usuario.nombre" 
+        #nombre="ngModel">
+      </ion-input>
     </ion-item>
+    <ion-text color="danger" *ngIf="nombre.invalid && nombre.touched">
+      <p>El nombre es obligatorio</p>
+    </ion-text>
 
-    <ion-button expand="full" class="ion-margin-top" color="primary" type="submit" [disabled]="frmRegister.invalid">
+    <!-- Tipo de usuario -->
+    <ion-item>
+      <ion-label>Tipo de Usuario</ion-label>
+      <ion-select name="tipo" [(ngModel)]="usuario.tipo" required #tipo="ngModel">
+        <ion-select-option value="admin">conductor</ion-select-option>
+        <ion-select-option value="user">cliente</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-text color="danger" *ngIf="tipo.invalid && tipo.touched">
+      <p>El tipo de usuario es obligatorio</p>
+    </ion-text>
+
+    <!-- Botón de registro -->
+    <ion-button 
+      expand="full" 
+      class="ion-margin-top" 
+      color="primary" 
+      type="submit" 
+      [disabled]="frmRegister.invalid">
       Crear cuenta
     </ion-button>
   </form>
